@@ -1,8 +1,12 @@
 import grid
 import pygame
+import time
 
-game = grid.Grid(256, 256)
+constMul = 3
+constSize = 250
+game = grid.Grid(constSize, constSize)
 game.SetRandomGrid()
+
 
 #print(game.Width())
 # print(game.Height())
@@ -16,12 +20,13 @@ game.SetRandomGrid()
 # import pygame
 
 pygame.init()
-gameDisplay = pygame.display.set_mode((5*256,5*256))
+gameDisplay = pygame.display.set_mode((constMul*constSize,constMul*constSize))
 
 white = (255,255,255)
 black  = (0,0,0)
 
 gameExit = False
+
 
 while not gameExit:
     for event in pygame.event.get():
@@ -29,9 +34,11 @@ while not gameExit:
             gameExit = True
     
     gameDisplay.fill(white)
-    for heightArg in range(game.Height()):
-        for widthArg in range(game.Width()):
+    game.Update()
+    time.sleep(0.05) #zmniejsza użycie procesora
+    for heightArg in range(0,game.Height()):
+        for widthArg in range(0,game.Width()):
             if game.GetPixelState(heightArg,widthArg) == 1:
-                pygame.draw.rect(gameDisplay, black, [heightArg * 5 ,widthArg * 5,5*1,5*1])
+                pygame.draw.rect(gameDisplay, black, [heightArg * constMul ,widthArg * constMul,constMul*1,constMul*1])
     pygame.display.update()
 

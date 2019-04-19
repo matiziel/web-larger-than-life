@@ -12,7 +12,6 @@ BOOST_PYTHON_MODULE(grid)
         .def("Width", &Grid::Width)
         .def("GetPixelState", &Grid::GetPixelState)
         .def("SetRandomGrid", &Grid::SetRandomGrid)
-        //.def("Update", &Grid::Update)
-        //.def("Initialize", &Grid::Initialize)
+        .def("Update", &Grid::Update)
         ;
 }
