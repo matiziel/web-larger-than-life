@@ -1,11 +1,11 @@
-import grid
+import board
 import pygame
 import time
 
-constMul = 3
-constSize = 250
-game = grid.Grid(constSize, constSize)
-game.SetRandomGrid()
+constMul = 10
+constSize = 64
+game = board.Board(constSize, constSize)
+game.SetConstBoard()
 
 
 #print(game.Width())
@@ -35,7 +35,7 @@ while not gameExit:
     
     gameDisplay.fill(white)
     game.Update()
-    time.sleep(0.05) #zmniejsza użycie procesora
+    time.sleep(1) #zmniejsza użycie procesora
     for heightArg in range(0,game.Height()):
         for widthArg in range(0,game.Width()):
             if game.GetPixelState(heightArg,widthArg) == 1:

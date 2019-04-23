@@ -1,10 +1,11 @@
 CC = g++
 CFLAGS = -O3 -Wall -std=c++11
 PYTHONPATH = /usr/include/python3.6/
-NAME = grid
+NAME = Board
+MODULE = board
 
-$(NAME).so: $(NAME).o
-	$(CC) -shared -W $(NAME).o -lboost_python3 -I $(PYTHONPATH) -o $(NAME).so
+$(MODULE).so: $(NAME).o
+	$(CC) -shared -W $(NAME).o -lboost_python3 -I $(PYTHONPATH) -o $(MODULE).so
 
 $(NAME).o: $(NAME).cpp $(NAME).h
 	$(CC) $(CFLAGS) -fPIC -I $(PYTHONPATH) -c $(NAME).cpp -o $(NAME).o
