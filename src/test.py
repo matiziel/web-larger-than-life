@@ -2,10 +2,11 @@ import board
 import pygame
 import time
 
-constMul = 3
-constSize = 300
+constMul = 10
+constSize = 100
 game = board.Board(constSize, constSize)
-game.SetRandomBoard()
+game.SetConstBoard()
+#game.SetRandomBoard()
 
 
 #print(game.Width())
@@ -34,11 +35,11 @@ while not gameExit:
             gameExit = True
     
     gameDisplay.fill(black)
-    game.Update()
-    time.sleep(0.01) #zmniejsza użycie procesora
+    time.sleep(2) #zmniejsza użycie procesora
     for heightArg in range(0,game.Height()):
         for widthArg in range(0,game.Width()):
             if game.GetPixelState(heightArg,widthArg) == 1:
                 pygame.draw.rect(gameDisplay, white, [heightArg * constMul ,widthArg * constMul,constMul*1,constMul*1])
+    game.Update()
     pygame.display.update()
 

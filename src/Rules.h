@@ -5,21 +5,21 @@ enum NeighbourhoodTypes {Moore, Neumann, Circular};
 
 class Rules
 {
-    typedef unsigned int Uint;
+    typedef unsigned short UShort;
 private:
 
-Uint range;
-Uint numberOfStates;
+UShort range;
+UShort numberOfStates;
 bool middleCell;
-Uint survivalMin;
-Uint survivalMax;
-Uint birthMin;
-Uint birthMax;
+UShort survivalMin;
+UShort survivalMax;
+UShort birthMin;
+UShort birthMax;
 NeighbourhoodTypes neighbourhoodType;
 
 public:
-    Rules(Uint rArg = 1, Uint cArg = 2, bool mArg = 0, Uint sMinArg = 2,
-    Uint sMaxArg = 3, Uint bMinArg = 3, Uint bMaxArg = 3, NeighbourhoodTypes nArg = Moore):
+    Rules(UShort rArg = 1, UShort cArg = 2, bool mArg = 0, UShort sMinArg = 2,
+    UShort sMaxArg = 3, UShort bMinArg = 3, UShort bMaxArg = 3, NeighbourhoodTypes nArg = Moore):
     range(rArg),
     numberOfStates(cArg),
     middleCell(mArg),
@@ -29,39 +29,39 @@ public:
     birthMax(bMaxArg),
     neighbourhoodType(nArg) {}
 
-    const Uint GetRange() const
+    const UShort GetRange() const
     {
         return range;
     }
-    const Uint GetStates() const
+    const UShort GetStates() const
     {
         return numberOfStates;
     }
-    const Uint GetMiddle() const
+    const UShort GetMiddle() const
     {
         return middleCell;
     }
-    const Uint GetSMin() const
+    const UShort GetSMin() const
     {
         return survivalMin;
     }
-    const Uint GetSMax() const
+    const UShort GetSMax() const
     {
         return survivalMax;
     }
-    const Uint GetBMin() const
+    const UShort GetBMin() const
     {
         return birthMin;
     }
-    const Uint GetBMax() const
+    const UShort GetBMax() const
     {
         return birthMax;
     }
-    const Uint GetN() const
+    const UShort GetN() const
     {
         return neighbourhoodType;
     }
 
-    ~Rules();
+    //~Rules();
 };
 #endif

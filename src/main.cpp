@@ -5,15 +5,15 @@
 #include "Board.h"
 
 
-std::clock_t test(unsigned const int tableSize,unsigned const int amountOfIter)
+std::clock_t test(unsigned const int tableSize,unsigned const int range)
 {
         Board grid(tableSize,tableSize);
         grid.SetRandomBoard();
         std::clock_t time;
         time = std::clock();
-        for (unsigned int i = 0; i < amountOfIter; ++i) 
+        for (unsigned int i = 0; i < 5; ++i) 
         {
-            grid.Update();
+            grid.Update(range);
         }
         time = std::clock() - time;
         return time;
@@ -25,10 +25,10 @@ std::clock_t test(unsigned const int tableSize,unsigned const int amountOfIter)
 int main(int argc, char** argv)
 {
 
-    std::cout<<"Update() tableSize: 25, amount of iter: 10000, result: "<<static_cast<int>(test(25,10000))<<std::endl;
-    // std::cout<<"Update() tableSize: 500, amount of iter: 50,  result: "<<static_cast<int>(test(500,50))<<std::endl;
-    // std::cout<<"Update() tableSize: 1000, amount of iter: 10, result: "<<static_cast<int>(test(1000,10))<<std::endl;
-    // std::cout<<"Update() tableSize: 10000, amount of iter: 1, result: "<<static_cast<int>(test(10000,1))<<std::endl;
-    // return 0;
+    std::cout<<"Update() tableSize: 250, range: 1, result: "<<static_cast<int>(test(10,1))<<std::endl;
+    std::cout<<"Update() tableSize: 250, range: 3, result: "<<static_cast<int>(test(10,3))<<std::endl;
+    std::cout<<"Update() tableSize: 250, range: 5, result: "<<static_cast<int>(test(10,5))<<std::endl;
+    std::cout<<"Update() tableSize: 250, range: 10, result: "<<static_cast<int>(test(20,10))<<std::endl;
+    return 0;
 }
 
