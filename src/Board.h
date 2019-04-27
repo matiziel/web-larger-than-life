@@ -2,6 +2,7 @@
 #define BOARD_H
 #include "boost/multi_array.hpp"
 #include <thread>
+#include "Rules.h"
 
 
 enum {DEAD, ALIVE};
@@ -11,11 +12,13 @@ const unsigned int DEFAULT_SIZE = 256;
 class Board
 {
 	typedef boost::multi_array<int, 2> MultiArray;
+	typedef unsigned int Uint;
 public:
 	// Board()=delete;
 	// Board(const Board& arg)=delete;
 	// Board& operator=(const Board& arg)=delete;
-	Board(const unsigned int height = DEFAULT_SIZE, const unsigned int width = DEFAULT_SIZE) : gridA(boost::extents[height+2][width+2]), gridB(boost::extents[height+2][width+2])
+	Board(const unsigned int height = DEFAULT_SIZE, const unsigned int width = DEFAULT_SIZE) 
+	: gridA(boost::extents[height+2][width+2]), gridB(boost::extents[height+2][width+2])
 	{
 		//plus dwa aby nie trzeba było sprawdzać za kazdym razem 
 		//czy można sie odwołać do nastepnego czy poprzedniego
@@ -43,22 +46,11 @@ public:
 		}
 	}
 
-	void SetConstBoard()
-	{
-		unsigned int k = Width()/2;
-		unsigned int i = Height()/2;
-		(*current)[i][k] = ALIVE;
-		(*current)[i][k+1] = ALIVE;
-		(*current)[i+1][k] = ALIVE;
-		(*current)[i+1][k+1] = ALIVE;
-
-		k = Width()/4;
-		i = Height()/4;
-		(*current)[i][k] = ALIVE;
-		(*current)[i+1][k] = ALIVE;
-		(*current)[i+2][k] = ALIVE;
-
-	}
+	// void SetRules(Uint rArg = 1, Uint cArg = 2, bool mArg = 0, Uint sMinArg = 2,
+    // Uint sMaxArg = 3, Uint bMinArg = 3, Uint bMaxArg = 3, NeighbourhoodTypes nArg = Moore)
+	// {
+	// 		rules.SetRules(rArg, )
+	// }
 
 	unsigned int Width() const 
 	{
@@ -76,22 +68,40 @@ public:
 			throw std::invalid_argument("Board overflow");
 		return static_cast<int>((*current)[heightArg+1][widthArg+1]);
 	}
-	// void Update()
-	// {
-	// 	//tu potem beda dwie tablice zeby mniej kopiowac
-	// 	MultiArray other = grid;
-	// 	std::thread t1(&Board::UpdateThread, this, std::ref(other), 0, this->Height()/4 );
-	// 	std::thread t2(&Board::UpdateThread, this, std::ref(other), this->Height()/4, this->Height()/2 );
-	// 	std::thread t3(&Board::UpdateThread, this, std::ref(other), this->Height()/2, 3*this->Height()/4 );
-	// 	std::thread t4(&Board::UpdateThread, this, std::ref(other), 3*this->Height()/4, this->Height() );
-	// 	t1.join();
-	// 	t2.join();
-	// 	t3.join();
-	// 	t4.join();
-	// }
+	
 void Update()
 {
-	for(unsigned int i = 1; i < this->Height(); ++i)
+	Uint range=rules.GetRange();
+	for(unsigned int i = -range; i <= range; ++i)
+	{
+		for(unsigned int k = -abs(i) + range + 1; k <= abs(i) - range - 1; ++k)
+		{
+			unsigned short sum = SumOfNeighbors(*current, i, k);
+			if((*current)[i][k] == DEAD)
+			{
+				if(sum == 3) 
+					(*next)[i][k] = ALIVE;
+				else 
+					(*next)[i][k] = DEAD;
+			}
+			else 
+			{
+				if(sum < 2 || sum > 3) 
+					(*next)[i][k] = DEAD;
+				else 
+					(*next)[i][k] = ALIVE;
+			}
+		}
+	} 
+	MultiArray* temp = current;
+	current = next;
+	next = temp;
+}
+		
+void UpdateMoore()
+{
+	
+	for(unsigned int i = 1 i < this->Height(); ++i)
 	{
 		for(unsigned int k = 1; k < this->Width(); ++k)
 		{
@@ -116,7 +126,6 @@ void Update()
 	current = next;
 	next = temp;
 }
-	
 
 
 private:
@@ -124,6 +133,8 @@ private:
 	MultiArray gridB;
 	MultiArray* current;
 	MultiArray* next;
+
+	Rules rules;
 
 
 	unsigned short SumOfNeighbors(const MultiArray& gridArg, const unsigned int heightArg, const unsigned int widthArg) const
@@ -142,20 +153,6 @@ private:
 		sum += ALIVE == gridArg[heightArg + 1][widthArg + 1];
 		return sum;
 	}
-
-	// void UpdateThread(const MultiArray& other, const unsigned int begin, const unsigned int end )
-	// {
-	// 	for(unsigned int i = begin; i < end; ++i)
-	// 	{
-	// 		for(unsigned int k = 0; k < this->Width(); ++k)
-	// 		{
-	// 			unsigned short sum = SumOfNeighbors(other, i+1, k+1);
-	// 			if(other[i+1][k+1] == DEAD && sum == 3) grid[i+1][k+1] = ALIVE;
-	// 			if(other[i+1][k+1] == ALIVE && (sum < 2 || sum > 3)) grid[i+1][k+1] = DEAD;
-	// 		}
-	// 	}
-
-	// }
 
 };
 
