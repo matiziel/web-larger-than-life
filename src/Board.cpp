@@ -12,7 +12,6 @@ BOOST_PYTHON_MODULE(board)
         .def("Width", &Board::Width)
         .def("GetPixelState", &Board::GetPixelState)
         .def("SetRandomBoard", &Board::SetRandomBoard)
-        .def("SetConstBoard", &Board::SetConstBoard)
         .def("Update", &Board::Update)
         ;
 }

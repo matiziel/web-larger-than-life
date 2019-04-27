@@ -51,7 +51,7 @@ public:
     }
     const Uint GetBMin() const
     {
-        return birtMin;
+        return birthMin;
     }
     const Uint GetBMax() const
     {

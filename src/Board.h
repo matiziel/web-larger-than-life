@@ -101,7 +101,7 @@ void Update()
 void UpdateMoore()
 {
 	
-	for(unsigned int i = 1 i < this->Height(); ++i)
+	for(unsigned int i = 1; i < this->Height(); ++i)
 	{
 		for(unsigned int k = 1; k < this->Width(); ++k)
 		{
