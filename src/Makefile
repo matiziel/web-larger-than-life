@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -O3 -Wall -std=c++11
-PYTHONPATH = /usr/include/python3.6/
+PYTHONPATH = /usr/include/python3.7/
 NAME = Board
 MODULE = board
 
@@ -12,4 +12,8 @@ $(NAME).o: $(NAME).cpp $(NAME).h
 
 clean:
 	rm -f *.o
-
+run:
+	rm board.so -f
+	make clean
+	make
+	python3 test.py

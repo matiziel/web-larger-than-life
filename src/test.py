@@ -2,11 +2,17 @@ import board
 import pygame
 import time
 
-constMul = 10
-constSize = 100
+constMul = 2
+constSize = 300
+sleepTime = 2
+random1constant0 = 1
+percentOfAlive = 90
+
 game = board.Board(constSize, constSize)
+
 game.SetConstBoard()
-#game.SetRandomBoard()
+if random1constant0 == 1:
+    game.SetRandomBoard(percentOfAlive)
 
 
 #print(game.Width())
@@ -35,7 +41,11 @@ while not gameExit:
             gameExit = True
     
     gameDisplay.fill(black)
-    time.sleep(2) #zmniejsza użycie procesora
+
+
+    time.sleep(sleepTime) #zmniejsza użycie procesora
+
+
     for heightArg in range(0,game.Height()):
         for widthArg in range(0,game.Width()):
             if game.GetPixelState(heightArg,widthArg) == 1:

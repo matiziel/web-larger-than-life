@@ -30,15 +30,16 @@ public:
 		}
 		current = &gridA;
 		next = &gridB;
+		//Initialize();
 	}
-	void SetRandomBoard()
+	void SetRandomBoard(int percentAlive)
 	{
-		srand (time(NULL)); //ja bym srandował gdzie indziej, np w konstruktorze
+		srand (time(NULL)); //ja bym srandowal gdzie indziej, np w konstruktorze
 		for(UShort i = 0; i < this->Height(); ++i)
 		{
 			for(UShort k = 0; k < this->Width(); ++k)
 			{
-				(*current)[i][k] = (rand() % 5) / 4;; //80% jest zerami
+				(*current)[i][k] = 0==((rand() % 100) / percentAlive); //percentAlive procent jest zywe
 			}
 		}
 	}
@@ -58,8 +59,8 @@ public:
 		(*current)[i+2][k] = ALIVE;
 
 	}
-	// void SetRules(Uint rArg = 1, Uint cArg = 2, bool mArg = 0, Uint sMinArg = 2,
-    // Uint sMaxArg = 3, Uint bMinArg = 3, Uint bMaxArg = 3, NeighbourhoodTypes nArg = Moore)
+	// void SetRules(Ushort rArg = 1, Ushort cArg = 2, bool mArg = 0, Ushort sMinArg = 2,
+    // Ushort sMaxArg = 3, Ushort bMinArg = 3, Ushort bMaxArg = 3, NeighbourhoodTypes nArg = Moore)
 	// {
 	// 		rules.SetRules(rArg, )
 	// }
@@ -80,16 +81,16 @@ public:
 			throw std::invalid_argument("Board overflow");
 		return static_cast<int>((*current)[heightArg][widthArg]);
 	}
-	
+
 void Update()
 {
-	
-	for(UShort i = 1; i < this->Height()-1; ++i)
+	for(UShort i = 0; i < this->Height(); ++i)
 	{
-		for(UShort k = 1; k < this->Width()-1; ++k)
+		for(UShort k = 0; k < this->Width(); ++k)
 		{
-			UShort sum = SumOfNeighborsNeumann(i, k);
-			//unsigned short sum = SumOfNeighborsMoore(i, k, range);
+			UShort sum = SumOfNeighboursMoore(i, k);
+			// UShort sum = SumOfNeighboursNeumann(i, k);
+			// UShort sum = SumOfNeighbours(i, k); // tak powinno być ale nie działa
 			if((*current)[i][k] == DEAD)
 			{
 				if(sum == 3) 
@@ -119,52 +120,47 @@ private:
 	MultiArray* next;
 
 	Rules rules;
+	// const UShort (*SumOfNeighbours) (const UShort, const UShort) const;
+	// function pointer przechowujacy pointer do odpowiedniej funckji sumowania sąsiedztwa ale nie działa
 
-
-	UShort SumOfNeighborsMoore(const UShort heightArg, const UShort widthArg) const
+	const UShort SumOfNeighboursMoore(const UShort heightArg, const UShort widthArg) const
 	{
 		UShort sum = 0;
-		UShort range = rules.GetRange();
-		bool middle = rules.GetMiddle();
 		
-		for(int arrY = heightArg-range; arrY <= static_cast<int>(heightArg + range); ++arrY)
+		for(int arrY = heightArg - rules.range; arrY <= static_cast<int>(heightArg + rules.range); ++arrY)
 		{
-			for(int arrX = widthArg-range; arrX <= static_cast<int>(widthArg + range); ++arrX)
+			for(int arrX = widthArg - rules.range; arrX <= static_cast<int>(widthArg + rules.range); ++arrX)
 			{
 				if(arrX < 0 || static_cast<UShort>(arrX) >= Width() || arrY < 0 || static_cast<UShort>(arrY) >= Height()) continue;
 				sum += ALIVE == (*current)[arrY][arrX];
 			}
 		}
-		if(!middle) sum -= ALIVE == (*current)[heightArg][widthArg];
+		if(!rules.middleCell) sum -= ALIVE == (*current)[heightArg][widthArg];
 		return sum;
 	}
 
-	unsigned short SumOfNeighborsNeumann(const UShort heightArg, const UShort widthArg) const
+	const UShort SumOfNeighboursNeumann(const UShort heightArg, const UShort widthArg) const
 	{
 		UShort sum = 0;
-		UShort range = rules.GetRange();
-		bool middle = rules.GetMiddle();
 		
-		for(int arrY = heightArg-range; arrY <= static_cast<int>(heightArg + range); ++arrY)
+		for(int arrY = heightArg - rules.range; arrY <= static_cast<int>(heightArg + rules.range); ++arrY)
 		{
-			for(int arrX = widthArg + abs(arrY - heightArg) - range - 1; arrX <= widthArg - abs(arrY - heightArg) + range + 1; ++arrX)
+			for(int arrX = widthArg + abs(arrY - heightArg) - rules.range; arrX <= widthArg - abs(arrY - heightArg) + rules.range; ++arrX)
 			{
 				if(arrX < 0 || static_cast<UShort>(arrX) >= Width() || arrY < 0 || static_cast<UShort>(arrY) >= Height()) continue;
 				sum += ALIVE == (*current)[arrY][arrX];
 			}
 		}
-		if(!middle) sum -= ALIVE == (*current)[heightArg][widthArg];
+		if(!rules.middleCell) sum -= ALIVE == (*current)[heightArg][widthArg];
 		return sum;
-
-
-		// UShort sum = 0;
-		// sum += ALIVE == (*current)[heightArg - 1][widthArg];
-		// sum += ALIVE == (*current)[heightArg][widthArg - 1];
-		// sum += ALIVE == (*current)[heightArg][widthArg + 1];
-		// sum += ALIVE == (*current)[heightArg + 1][widthArg];
-		// return sum;
 	}
 
+	// void Initialize() //metoda do ustawiania potrzebnych rzeczy z reguł, wywoływana w konstruktorze i w razie zmiany zasad
+	// {
+	// 	if(rules.GetN() == Moore) SumOfNeighbours = SumOfNeighboursMoore;
+	// 	else if(rules.GetN() == Neumann) SumOfNeighbours = SumOfNeighboursNeumann;
+	// 	else if(rules.GetN==Circular) sumOfNeighbours = SumOfNeighboursCircular;
+	// }
 };
 
 #endif
