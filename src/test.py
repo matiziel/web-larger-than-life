@@ -3,10 +3,10 @@ import pygame
 import time
 
 constMul = 2
-constSize = 300
-sleepTime = 2
+constSize = 400
+sleepTime = 0.01
 random1constant0 = 1
-percentOfAlive = 90
+percentOfAlive = 30
 
 game = board.Board(constSize, constSize)
 

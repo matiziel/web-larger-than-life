@@ -93,17 +93,17 @@ void Update()
 			// UShort sum = SumOfNeighbours(i, k); // tak powinno być ale nie działa
 			if((*current)[i][k] == DEAD)
 			{
-				if(sum == 3) 
+				if(sum >= rules.GetBMin() && sum <= rules.GetBMax()) 
 					(*next)[i][k] = ALIVE;
 				else 
 					(*next)[i][k] = DEAD;
 			}
 			else 
 			{
-				if(sum < 2 || sum > 3) 
-					(*next)[i][k] = DEAD;
-				else 
+				if(sum >= rules.GetSMin() && sum <= rules.GetSMax()) 
 					(*next)[i][k] = ALIVE;
+				else 
+					(*next)[i][k] = DEAD;
 			}
 		}
 	} 
@@ -127,15 +127,15 @@ private:
 	{
 		UShort sum = 0;
 		
-		for(int arrY = heightArg - rules.range; arrY <= static_cast<int>(heightArg + rules.range); ++arrY)
+		for(int arrY = heightArg - rules.GetRange(); arrY <= static_cast<int>(heightArg + rules.GetRange()); ++arrY)
 		{
-			for(int arrX = widthArg - rules.range; arrX <= static_cast<int>(widthArg + rules.range); ++arrX)
+			for(int arrX = widthArg - rules.GetRange(); arrX <= static_cast<int>(widthArg + rules.GetRange()); ++arrX)
 			{
 				if(arrX < 0 || static_cast<UShort>(arrX) >= Width() || arrY < 0 || static_cast<UShort>(arrY) >= Height()) continue;
 				sum += ALIVE == (*current)[arrY][arrX];
 			}
 		}
-		if(!rules.middleCell) sum -= ALIVE == (*current)[heightArg][widthArg];
+		if(!rules.GetMiddle()) sum -= ALIVE == (*current)[heightArg][widthArg];
 		return sum;
 	}
 
@@ -143,15 +143,15 @@ private:
 	{
 		UShort sum = 0;
 		
-		for(int arrY = heightArg - rules.range; arrY <= static_cast<int>(heightArg + rules.range); ++arrY)
+		for(int arrY = heightArg - rules.GetRange(); arrY <= static_cast<int>(heightArg + rules.GetRange()); ++arrY)
 		{
-			for(int arrX = widthArg + abs(arrY - heightArg) - rules.range; arrX <= widthArg - abs(arrY - heightArg) + rules.range; ++arrX)
+			for(int arrX = widthArg + abs(arrY - heightArg) - rules.GetRange(); arrX <= widthArg - abs(arrY - heightArg) + rules.GetRange(); ++arrX)
 			{
 				if(arrX < 0 || static_cast<UShort>(arrX) >= Width() || arrY < 0 || static_cast<UShort>(arrY) >= Height()) continue;
 				sum += ALIVE == (*current)[arrY][arrX];
 			}
 		}
-		if(!rules.middleCell) sum -= ALIVE == (*current)[heightArg][widthArg];
+		if(!rules.GetMiddle()) sum -= ALIVE == (*current)[heightArg][widthArg];
 		return sum;
 	}
 
