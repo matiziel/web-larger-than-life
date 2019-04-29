@@ -17,14 +17,15 @@ class Rules
     NeighbourhoodTypes neighbourhoodType;
 public:
     Rules(
-        UShort rArg = 7,
-        UShort cArg = 2,
+        UShort rArg = 10,
+        UShort cArg = 255,
         bool mArg = 1,
-        UShort sMinArg = 100,
-        UShort sMaxArg = 200,
-        UShort bMinArg = 75,
-        UShort bMaxArg = 170,
+        UShort sMinArg = 2,
+        UShort sMaxArg = 3,
+        UShort bMinArg = 3,
+        UShort bMaxArg = 3,
         NeighbourhoodTypes nArg = Moore
+        //zasada ModernArt
         ):
             range(rArg),
             numberOfStates(cArg),

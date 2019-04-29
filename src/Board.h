@@ -6,7 +6,6 @@
 #include <cmath>
 #include <iostream>
 
-enum {DEAD, ALIVE};
 const unsigned short DEFAULT_SIZE = 256;
 
 
@@ -25,7 +24,7 @@ public:
 		{
 			for(UShort k = 0; k < width; ++k)
 			{
-				gridA[i][k] = gridB[i][k] = DEAD;
+				gridA[i][k] = gridB[i][k] = 0;
 			}
 		}
 		current = &gridA;
@@ -47,16 +46,16 @@ public:
 	{
 		UShort k = Width()/2;
 		UShort i = Height()/2;
-		(*current)[i][k] = ALIVE;
-		(*current)[i][k+1] = ALIVE;
-		(*current)[i+1][k] = ALIVE;
-		(*current)[i+1][k+1] = ALIVE;
+		(*current)[i][k] = 1;
+		(*current)[i][k+1] = 1;
+		(*current)[i+1][k] = 1;
+		(*current)[i+1][k+1] = 1;
 
 		k = Width()/4;
 		i = Height()/4;
-		(*current)[i][k] = ALIVE;
-		(*current)[i+1][k] = ALIVE;
-		(*current)[i+2][k] = ALIVE;
+		(*current)[i][k] = 1;
+		(*current)[i+1][k] = 1;
+		(*current)[i+2][k] = 1;
 
 	}
 	// void SetRules(Ushort rArg = 1, Ushort cArg = 2, bool mArg = 0, Ushort sMinArg = 2,
@@ -91,20 +90,24 @@ void Update()
 			UShort sum = SumOfNeighboursMoore(i, k);
 			// UShort sum = SumOfNeighboursNeumann(i, k);
 			// UShort sum = SumOfNeighbours(i, k); // tak powinno być ale nie działa
-			if((*current)[i][k] == DEAD)
+
+
+
+			if((*current)[i][k] == 0) //Jeżeli martwe to ożywa albo zostaje martwe
 			{
 				if(sum >= rules.GetBMin() && sum <= rules.GetBMax()) 
-					(*next)[i][k] = ALIVE;
+					(*next)[i][k] = 1;
 				else 
-					(*next)[i][k] = DEAD;
+					(*next)[i][k] = 0;
 			}
-			else 
+			else if((*current)[i][k] == 1) //Jeżeli żywe to przeżywa albo zaczyna się starzeć
 			{
 				if(sum >= rules.GetSMin() && sum <= rules.GetSMax()) 
-					(*next)[i][k] = ALIVE;
+					(*next)[i][k] = 1;
 				else 
-					(*next)[i][k] = DEAD;
+					(*next)[i][k] = (++(*current)[i][k])%rules.GetStates();
 			}
+			else (*next)[i][k] = (++(*current)[i][k])%rules.GetStates(); //Starzeje się
 		}
 	} 
 	MultiArray* temp = current;
@@ -132,10 +135,10 @@ private:
 			for(int arrX = widthArg - rules.GetRange(); arrX <= static_cast<int>(widthArg + rules.GetRange()); ++arrX)
 			{
 				if(arrX < 0 || static_cast<UShort>(arrX) >= Width() || arrY < 0 || static_cast<UShort>(arrY) >= Height()) continue;
-				sum += ALIVE == (*current)[arrY][arrX];
+				sum += 1 == (*current)[arrY][arrX];
 			}
 		}
-		if(!rules.GetMiddle()) sum -= ALIVE == (*current)[heightArg][widthArg];
+		if(!rules.GetMiddle()) sum -= 1 == (*current)[heightArg][widthArg];
 		return sum;
 	}
 
@@ -148,10 +151,26 @@ private:
 			for(int arrX = widthArg + abs(arrY - heightArg) - rules.GetRange(); arrX <= widthArg - abs(arrY - heightArg) + rules.GetRange(); ++arrX)
 			{
 				if(arrX < 0 || static_cast<UShort>(arrX) >= Width() || arrY < 0 || static_cast<UShort>(arrY) >= Height()) continue;
-				sum += ALIVE == (*current)[arrY][arrX];
+				sum += 1 == (*current)[arrY][arrX];
 			}
 		}
-		if(!rules.GetMiddle()) sum -= ALIVE == (*current)[heightArg][widthArg];
+		if(!rules.GetMiddle()) sum -= 1 == (*current)[heightArg][widthArg];
+		return sum;
+	}
+
+	const UShort SumOfNeighboursCircular(const UShort heightArg, const UShort widthArg) const
+	{
+		UShort sum = 0;
+		
+		for(int arrY = heightArg - rules.GetRange(); arrY <= static_cast<int>(heightArg + rules.GetRange()); ++arrY)
+		{
+			for(int arrX = widthArg - rules.GetRange(); arrX <= static_cast<int>(widthArg + rules.GetRange()); ++arrX)
+			{
+				if(arrX < 0 || static_cast<UShort>(arrX) >= Width() || arrY < 0 || static_cast<UShort>(arrY) >= Height()) continue;
+				sum += 1 == (*current)[arrY][arrX];
+			}
+		}
+		if(!rules.GetMiddle()) sum -= 1 == (*current)[heightArg][widthArg];
 		return sum;
 	}
 
