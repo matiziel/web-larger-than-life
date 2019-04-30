@@ -2,11 +2,11 @@ import board
 import pygame
 import time
 
-constMul = 19
-constSize = 50
-sleepTime = 0
-random1constant0 = 0
-percentOfAlive = 3
+constMul = 5
+constSize = 200
+sleepTime = 0.02
+random1constant0 = 1
+percentOfAlive = 7
 
 game = board.Board(constSize, constSize)
 
@@ -48,8 +48,8 @@ while not gameExit:
 
     for heightArg in range(0,game.Height()):
         for widthArg in range(0,game.Width()):
-            if game.GetPixelState(heightArg,widthArg) > 0:
-                pygame.draw.rect(gameDisplay, (game.GetPixelState(heightArg,widthArg), 255*(1==(game.GetPixelState(heightArg,widthArg))), 0 ), [heightArg * constMul ,widthArg * constMul,constMul*1,constMul*1])
+            if game.GetPixelState(heightArg,widthArg) >0:
+                pygame.draw.rect(gameDisplay, white , [heightArg * constMul ,widthArg * constMul,constMul*1,constMul*1])
     game.Update()
     pygame.display.update()
 
