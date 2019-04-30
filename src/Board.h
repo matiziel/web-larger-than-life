@@ -77,7 +77,7 @@ public:
 	int GetPixelState(const UShort heightArg, const UShort widthArg) const 
 	{
 		if(heightArg >= this->Height() || widthArg >= this->Width())
-			throw std::invalid_argument("Board overflow");
+			throw std::out_of_range("Board overflow");
 		return static_cast<int>((*current)[heightArg][widthArg]);
 	}
 
@@ -128,6 +128,8 @@ private:
 
 	const UShort SumOfNeighboursMoore(const UShort heightArg, const UShort widthArg) const
 	{
+		// if(heightArg < 0 || heightArg > this->Height() || widthArg < 0 || widthArg > this->Width())
+		// 	throw std::out_of_range("Moore Neighbours overflow");
 		UShort sum = 0;
 		
 		for(int arrY = heightArg - rules.GetRange(); arrY <= static_cast<int>(heightArg + rules.GetRange()); ++arrY)
@@ -144,6 +146,8 @@ private:
 
 	const UShort SumOfNeighboursNeumann(const UShort heightArg, const UShort widthArg) const
 	{
+		// if(heightArg < 0 || heightArg > this->Height() || widthArg < 0 || widthArg > this->Width())
+		// 	throw std::out_of_range("Neumann Neighbours overflow");
 		UShort sum = 0;
 		
 		for(int arrY = heightArg - rules.GetRange(); arrY <= static_cast<int>(heightArg + rules.GetRange()); ++arrY)
@@ -160,6 +164,9 @@ private:
 
 	const UShort SumOfNeighboursCircular(const UShort heightArg, const UShort widthArg) const
 	{
+		// if(heightArg < 0 || heightArg > this->Height() || widthArg < 0 || widthArg > this->Width())
+		// 	throw std::out_of_range("Circular Neighbours overflow");
+
 		UShort sum = 0;
 		
 		for(int arrY = heightArg - rules.GetRange(); arrY <= static_cast<int>(heightArg + rules.GetRange()); ++arrY)
