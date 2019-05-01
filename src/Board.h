@@ -87,9 +87,11 @@ void Update()
 	{
 		for(UShort k = 0; k < this->Width(); ++k)
 		{
-			UShort sum = SumOfNeighboursMoore(i, k);
-			// UShort sum = SumOfNeighboursNeumann(i, k);
-			// UShort sum = SumOfNeighbours(i, k); // tak powinno być ale nie działa
+			UShort sum;
+			if(rules.GetN()==Moore) sum = SumOfNeighboursMoore(i, k);
+			else if(rules.GetN()==Neumann) sum = SumOfNeighboursNeumann(i, k);
+			else if(rules.GetN()==Circular) sum = SumOfNeighboursCircular(i, k);
+			else sum = SumOfNeighboursMoore(i, k);
 			
 			if((*current)[i][k] == 0) //Jeżeli martwe to ożywa albo zostaje martwe
 			{
@@ -106,22 +108,6 @@ void Update()
 					(*next)[i][k] = 2%rules.GetStates();
 			}
 			else (*next)[i][k] = (1+(*current)[i][k])%rules.GetStates(); //Starzeje się
-
-
-			// if((*current)[i][k] == 0)
-			// {
-			// 	if(sum == 3) 
-			// 		(*next)[i][k] = 1;
-			// 	else 
-			// 		(*next)[i][k] = 0;
-			// }
-			// else
-			// {
-			// 	if(sum >=2 && sum <= 3) 
-			// 		(*next)[i][k] = 1;
-			// 	else 
-			// 		(*next)[i][k] =0;
-			// }
 		}
 	} 
 	MultiArray* temp = current;
@@ -184,12 +170,13 @@ private:
 		// 	throw std::out_of_range("Circular Neighbours overflow");
 
 		UShort sum = 0;
-		
+		float rangeSquared = (rules.GetRange()+0.5)*(rules.GetRange()+0.5);
 		for(int arrY = heightArg - rules.GetRange(); arrY <= static_cast<int>(heightArg + rules.GetRange()); ++arrY)
 		{
 			for(int arrX = widthArg - rules.GetRange(); arrX <= static_cast<int>(widthArg + rules.GetRange()); ++arrX)
 			{
 				if(arrX < 0 || static_cast<UShort>(arrX) >= Width() || arrY < 0 || static_cast<UShort>(arrY) >= Height()) continue;
+				if((arrX-widthArg) * (arrX-widthArg) + (arrY-heightArg) * (arrY-heightArg) > rangeSquared) continue;
 				sum += 1 == (*current)[arrY][arrX];
 			}
 		}
