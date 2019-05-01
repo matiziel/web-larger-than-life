@@ -8,11 +8,17 @@ sleepTime = 0.02
 random1constant0 = 1
 percentOfAlive = 7
 
+Moore = 0
+Neumann = 1
+Circular = 2
+
 game = board.Board(constSize, constSize)
 
 game.SetConstBoard()
 if random1constant0 == 1:
     game.SetRandomBoard(percentOfAlive)
+
+game.SetRules(6,0,0,2,3,3,3,Circular)
 
 
 #print(game.Width())

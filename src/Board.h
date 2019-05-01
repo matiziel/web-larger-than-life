@@ -58,11 +58,11 @@ public:
 		(*current)[i+2][k] = 1;
 
 	}
-	// void SetRules(Ushort rArg = 1, Ushort cArg = 2, bool mArg = 0, Ushort sMinArg = 2,
-    // Ushort sMaxArg = 3, Ushort bMinArg = 3, Ushort bMaxArg = 3, NeighbourhoodTypes nArg = Moore)
-	// {
-	// 		rules.SetRules(rArg, )
-	// }
+	void SetRules(UShort rArg = 1, UShort cArg = 2, bool mArg = 0, UShort sMinArg = 2,
+    UShort sMaxArg = 3, UShort bMinArg = 3, UShort bMaxArg = 3, UShort nArg = 0)
+	{
+		rules.SetRules(rArg, cArg, mArg, sMinArg, sMaxArg, bMinArg, bMaxArg, nArg);
+	}
 
 	UShort Width() const 
 	{
@@ -88,9 +88,9 @@ void Update()
 		for(UShort k = 0; k < this->Width(); ++k)
 		{
 			UShort sum;
-			if(rules.GetN()==Moore) sum = SumOfNeighboursMoore(i, k);
-			else if(rules.GetN()==Neumann) sum = SumOfNeighboursNeumann(i, k);
-			else if(rules.GetN()==Circular) sum = SumOfNeighboursCircular(i, k);
+			if(rules.GetN() == 0) sum = SumOfNeighboursMoore(i, k);
+			else if(rules.GetN() == 1) sum = SumOfNeighboursNeumann(i, k);
+			else if(rules.GetN() == 2) sum = SumOfNeighboursCircular(i, k);
 			else sum = SumOfNeighboursMoore(i, k);
 			
 			if((*current)[i][k] == 0) //Jeżeli martwe to ożywa albo zostaje martwe

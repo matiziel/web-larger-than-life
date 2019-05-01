@@ -14,5 +14,6 @@ BOOST_PYTHON_MODULE(board)
         .def("SetRandomBoard", &Board::SetRandomBoard)
         .def("SetConstBoard", &Board::SetConstBoard)
         .def("Update", &Board::Update)
+        .def("SetRules", &Board::SetRules)
         ;
 }
