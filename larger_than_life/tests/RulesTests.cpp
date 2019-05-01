@@ -7,6 +7,6 @@
 
 BOOST_AUTO_TEST_CASE( GivenRulesObject_CheckingNeighbourhood )
 {
-    const Rules rules = Rules(Moore);
-    BOOST_CHECK_EQUAL(Moore, rules.GetN());
+    const Rules rules = Rules(0);
+    BOOST_CHECK_EQUAL(0, rules.GetN());
 } 

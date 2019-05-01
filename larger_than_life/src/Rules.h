@@ -71,10 +71,11 @@ public:
     void SetRules(UShort rArg = 1, UShort cArg = 2, bool mArg = 0, UShort sMinArg = 2,
     UShort sMaxArg = 3, UShort bMinArg = 3, UShort bMaxArg = 3, UShort nArg = 0)
     {
-        if( rArg < 1 || rArg > 500) throw std::invalid_argument("Invalid range");
-        if( cArg < 0 || cArg > 255) throw std::invalid_argument("Invalid states");
-        if( sMinArg < 0 || sMinArg > sMaxArg) throw std::invalid_argument("Invalid survival");
-        if( bMinArg < 1 || bMinArg > bMaxArg) throw std::invalid_argument("Invalid birth");
+        if(rArg < 1 || rArg > 500) throw std::invalid_argument("Invalid range parameter");
+        if(cArg < 0 || cArg > 255) throw std::invalid_argument("Invalid number of states parameter");
+        if(sMinArg < 0 || sMinArg > sMaxArg) throw std::invalid_argument("Invalid survival parameters");
+        if(bMinArg < 1 || bMinArg > bMaxArg) throw std::invalid_argument("Invalid birth parameters");
+	if(nArg < 0 || nArg > 2 ) throw std::invalid_argument("Invalid neighbourhood type parameter");
 
         range = rArg;
         numberOfStates = cArg;
