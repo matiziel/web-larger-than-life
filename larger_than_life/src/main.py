@@ -18,7 +18,7 @@ game.SetConstBoard()
 if random1constant0 == 1:
     game.SetRandomBoard(percentOfAlive)
 
-game.SetRules(6,0,0,2,3,3,3,Circular)
+game.SetRules(6,0,0,2,3,3,3,Moore)
 
 
 #print(game.Width())
