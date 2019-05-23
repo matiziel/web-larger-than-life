@@ -1,0 +1,10 @@
+{
+    "range": 10,
+    "numberOfStates": 255,
+    "middleCell": 1,
+    "survivalMin": 2,
+    "survivalMax": 3,
+    "birthMin": 3,
+    "birthMax": 3,
+    "neighbourhoodType": 0
+}

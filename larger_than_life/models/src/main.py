@@ -1,12 +1,13 @@
 import board
 import pygame
 import time
+import json
 
-constMul = 5
-constSize = 200
+constMul = 3 
+constSize = 300
 sleepTime = 0.02
-random1constant0 = 1
-percentOfAlive = 7
+random1constant0 = 0
+percentOfAlive = 50
 
 Moore = 0
 Neumann = 1
@@ -18,19 +19,15 @@ game.SetConstBoard()
 if random1constant0 == 1:
     game.SetRandomBoard(percentOfAlive)
 
-game.SetRules(6,0,0,2,3,3,3,Moore)
+nameOfFile = input("Enter name of file:")
 
-
-#print(game.Width())
-# print(game.Height())
-
-# print(game.GetPixelState(3,3))
-
-# try:
-#     print(game.GetPixelState(16,16))
-# except:
-#     print("Argument exception")
-# import pygame
+try:
+    with open("./rules/{}.json".format(nameOfFile), "r") as jsonFileRules:
+        data = json.load(jsonFileRules)
+        game.SetRules(data["range"], data["numberOfStates"], data["middleCell"], data["survivalMin"], data["survivalMax"], data["birthMin"], data["birthMax"], data["neighbourhoodType"])
+except:
+    print("Cannot open file, setting default rules\n")
+    game.SetRules(6,0,0,2,3,3,3,Moore)
 
 pygame.init()
 gameDisplay = pygame.display.set_mode((constMul*constSize,constMul*constSize))
@@ -39,7 +36,7 @@ white = (255,255,255)
 black  = (0,0,0)
 
 gameExit = False
-
+i=0
 
 while not gameExit:
     for event in pygame.event.get():
@@ -51,11 +48,13 @@ while not gameExit:
 
     time.sleep(sleepTime) #zmniejsza użycie procesora
 
-
+    print(i)
+    i+=1
     for heightArg in range(0,game.Height()):
         for widthArg in range(0,game.Width()):
+
             if game.GetPixelState(heightArg,widthArg) >0:
-                pygame.draw.rect(gameDisplay, white , [heightArg * constMul ,widthArg * constMul,constMul*1,constMul*1])
+                pygame.draw.rect(gameDisplay, (255,255,game.GetPixelState(heightArg,widthArg)) , [heightArg * constMul ,widthArg * constMul,constMul*1,constMul*1])
     game.Update()
     pygame.display.update()
 

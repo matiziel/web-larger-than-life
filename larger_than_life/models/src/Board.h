@@ -5,6 +5,7 @@
 #include "Rules.h"
 #include <cmath>
 #include <iostream>
+#include <functional>
 
 const unsigned short DEFAULT_SIZE = 256;
 
@@ -14,9 +15,6 @@ class Board
 	typedef boost::multi_array<int, 2> MultiArray;
 	typedef unsigned short UShort;
 public:
-	// Board()=delete;
-	// Board(const Board& arg)=delete;
-	// Board& operator=(const Board& arg)=delete;
 	Board(const UShort height = DEFAULT_SIZE, const UShort width = DEFAULT_SIZE) 
 	: gridA(boost::extents[height][width]), gridB(boost::extents[height][width])
 	{
@@ -29,16 +27,15 @@ public:
 		}
 		current = &gridA;
 		next = &gridB;
-		//Initialize();
 	}
 	void SetRandomBoard(int percentAlive)
 	{
-		srand (time(NULL)); //ja bym srandowal gdzie indziej, np w konstruktorze
+		srand (time(NULL));
 		for(UShort i = 0; i < this->Height(); ++i)
 		{
 			for(UShort k = 0; k < this->Width(); ++k)
 			{
-				(*current)[i][k] = 0==((rand() % 100) / percentAlive); //percentAlive procent jest zywe
+				(*current)[i][k] = 0==((rand() % 100) / percentAlive);
 			}
 		}
 	}
@@ -47,9 +44,9 @@ public:
 		UShort k = Width()/2;
 		UShort i = Height()/2;
 		(*current)[i][k] = 1;
-		(*current)[i][k+1] = 1;
-		(*current)[i+1][k] = 1;
-		(*current)[i+1][k+1] = 1;
+		(*current)[i][k-1] = 1;
+		(*current)[i-1][k] = 1;
+		(*current)[i-1][k-1] = 1;
 
 		k = Width()/4;
 		i = Height()/4;
