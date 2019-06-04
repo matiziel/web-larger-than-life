@@ -3,11 +3,11 @@ import pygame
 import time
 import json
 
-constMul = 3 
+constMul = 3
 constSize = 300
 sleepTime = 0.02
 random1constant0 = 0
-percentOfAlive = 50
+percentOfAlive = 40
 
 Moore = 0
 Neumann = 1
@@ -27,10 +27,11 @@ try:
         game.SetRules(data["range"], data["numberOfStates"], data["middleCell"], data["survivalMin"], data["survivalMax"], data["birthMin"], data["birthMax"], data["neighbourhoodType"])
 except:
     print("Cannot open file, setting default rules\n")
-    game.SetRules(6,0,0,2,3,3,3,Moore)
 
 pygame.init()
 gameDisplay = pygame.display.set_mode((constMul*constSize,constMul*constSize))
+
+game.SetRules(1,0,1,1,1,1,1,1)
 
 white = (255,255,255)
 black  = (0,0,0)
@@ -45,16 +46,13 @@ while not gameExit:
     
     gameDisplay.fill(black)
 
-
     time.sleep(sleepTime) #zmniejsza użycie procesora
 
-    print(i)
-    i+=1
     for heightArg in range(0,game.Height()):
         for widthArg in range(0,game.Width()):
 
             if game.GetPixelState(heightArg,widthArg) >0:
-                pygame.draw.rect(gameDisplay, (255,255,game.GetPixelState(heightArg,widthArg)) , [heightArg * constMul ,widthArg * constMul,constMul*1,constMul*1])
+                pygame.draw.rect(gameDisplay, (255,255,254) , [heightArg * constMul ,widthArg * constMul,constMul*1,constMul*1])
     game.Update()
     pygame.display.update()
 

@@ -27,6 +27,11 @@ public:
 		}
 		current = &gridA;
 		next = &gridB;
+
+		if(rules.GetN() == 0) sumOfNeighbours = std::bind(&Board::SumOfNeighboursMoore, this, std::placeholders::_1, std::placeholders::_2);
+		else if(rules.GetN() == 1) sumOfNeighbours = std::bind(&Board::SumOfNeighboursCircular, this, std::placeholders::_1, _2);
+		else if(rules.GetN() == 2) sumOfNeighbours = std::bind(&Board::SumOfNeighboursNeumann, this, std::placeholders::_1, std::placeholders::_2);
+		else sumOfNeighbours = std::bind(&Board::SumOfNeighboursMoore, this, std::placeholders::_1, std::placeholders::_2);
 	}
 	void SetRandomBoard(int percentAlive)
 	{
@@ -84,11 +89,7 @@ void Update()
 	{
 		for(UShort k = 0; k < this->Width(); ++k)
 		{
-			UShort sum;
-			if(rules.GetN() == 0) sum = SumOfNeighboursMoore(i, k);
-			else if(rules.GetN() == 1) sum = SumOfNeighboursNeumann(i, k);
-			else if(rules.GetN() == 2) sum = SumOfNeighboursCircular(i, k);
-			else sum = SumOfNeighboursMoore(i, k);
+			UShort sum = sumOfNeighbours(i,k);
 			
 			if((*current)[i][k] == 0) //Jeżeli martwe to ożywa albo zostaje martwe
 			{
@@ -118,6 +119,8 @@ private:
 	MultiArray gridB;
 	MultiArray* current;
 	MultiArray* next;
+
+	std::function<int(int, int)> sumOfNeighbours;
 
 	Rules rules;
 	// const UShort (*SumOfNeighbours) (const UShort, const UShort) const;
