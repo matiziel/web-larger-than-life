@@ -27,11 +27,7 @@ public:
 		}
 		current = &gridA;
 		next = &gridB;
-
-		if(rules.GetN() == 0) sumOfNeighbours = std::bind(&Board::SumOfNeighboursMoore, this, std::placeholders::_1, std::placeholders::_2);
-		else if(rules.GetN() == 1) sumOfNeighbours = std::bind(&Board::SumOfNeighboursCircular, this, std::placeholders::_1, _2);
-		else if(rules.GetN() == 2) sumOfNeighbours = std::bind(&Board::SumOfNeighboursNeumann, this, std::placeholders::_1, std::placeholders::_2);
-		else sumOfNeighbours = std::bind(&Board::SumOfNeighboursMoore, this, std::placeholders::_1, std::placeholders::_2);
+		sumOfNeighbours = std::bind(&Board::SumOfNeighboursMoore, this, std::placeholders::_1, std::placeholders::_2);
 	}
 	void SetRandomBoard(int percentAlive)
 	{
@@ -63,7 +59,13 @@ public:
 	void SetRules(UShort rArg = 1, UShort cArg = 2, bool mArg = 0, UShort sMinArg = 2,
     UShort sMaxArg = 3, UShort bMinArg = 3, UShort bMaxArg = 3, UShort nArg = 0)
 	{
-		rules.SetRules(rArg, cArg, mArg, sMinArg, sMaxArg, bMinArg, bMaxArg, nArg);
+		rules.SetRules(rArg, cArg, mArg, sMinArg, sMaxArg, bMinArg, bMaxArg, nArg);			
+		if(rules.GetN() == 1) 
+			sumOfNeighbours = std::bind(&Board::SumOfNeighboursCircular, this, std::placeholders::_1, std::placeholders::_2);
+		else if(rules.GetN() == 2) 
+			sumOfNeighbours = std::bind(&Board::SumOfNeighboursNeumann, this, std::placeholders::_1, std::placeholders::_2);
+
+
 	}
 
 	UShort Width() const 
@@ -121,10 +123,7 @@ private:
 	MultiArray* next;
 
 	std::function<int(int, int)> sumOfNeighbours;
-
 	Rules rules;
-	// const UShort (*SumOfNeighbours) (const UShort, const UShort) const;
-	// function pointer przechowujacy pointer do odpowiedniej funckji sumowania sąsiedztwa ale nie działa
 
 	const UShort SumOfNeighboursMoore(const UShort heightArg, const UShort widthArg) const
 	{
@@ -183,13 +182,6 @@ private:
 		if(!rules.GetMiddle()) sum -= 1 == (*current)[heightArg][widthArg];
 		return sum;
 	}
-
-	// void Initialize() //metoda do ustawiania potrzebnych rzeczy z reguł, wywoływana w konstruktorze i w razie zmiany zasad
-	// {
-	// 	if(rules.GetN() == Moore) SumOfNeighbours = SumOfNeighboursMoore;
-	// 	else if(rules.GetN() == Neumann) SumOfNeighbours = SumOfNeighboursNeumann;
-	// 	else if(rules.GetN==Circular) sumOfNeighbours = SumOfNeighboursCircular;
-	// }
 };
 
 #endif

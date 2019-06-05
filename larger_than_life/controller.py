@@ -10,4 +10,4 @@ def index():
 @app.route('/game')
 def game():
     appName = "Larger Than Life"
-    return render_template('game.html', title=appName)
+    return render_template('game.html', title=appName, boardHeight=1024, boardWidth=1024)

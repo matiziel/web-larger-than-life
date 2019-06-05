@@ -2,7 +2,21 @@
 <head>
     <title> {{title}} </title>
 </head>
+<h1>Gra</h1>
+<canvas id="gameBoard" width={{boardWidth}} height={{boardHeight}} style="border:1px solid #000000;">
+        Your browser does not support the HTML5 canvas tag.</canvas>
 <body>
-    <h1>Gra</h1>
+    
+    <script>
+    var board = document.getElementById("gameBoard");
+    var ctx = board.getContext("2d");
+    ctx.fillStyle = "red";
+    ctx.fillRect(10,10,2,2);
+    ctx.stroke();
+    </script>
 </body>
+
+
+
+
 </html>
