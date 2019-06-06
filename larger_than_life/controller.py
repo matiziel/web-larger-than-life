@@ -7,11 +7,11 @@ import random
 constSize = 256
 constMul = 4
 gameBoard = board.Board(constSize, constSize)
-gameBoard.SetConstBoard()
-
+#gameBoard.SetConstBoard()
+gameBoard.SetRandomBoard(50)
 
 try:
-    with open("./../models/src/rules/Gnarl.json", "r") as jsonFileRules:
+    with open("./larger_than_life/models/src/rules/Bosco.json", "r") as jsonFileRules:
         data = json.load(jsonFileRules)
         gameBoard.SetRules(data["range"], data["numberOfStates"], data["middleCell"], data["survivalMin"], data["survivalMax"], data["birthMin"], data["birthMax"], data["neighbourhoodType"])
 except:

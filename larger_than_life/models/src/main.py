@@ -6,7 +6,7 @@ import json
 constMul = 3
 constSize = 300
 sleepTime = 0.02
-random1constant0 = 1
+random1constant0 = 0
 percentOfAlive = 50
 
 Moore = 0
