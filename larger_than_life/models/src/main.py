@@ -6,7 +6,7 @@ import json
 constMul = 3
 constSize = 300
 sleepTime = 0.02
-random1constant0 = 1
+random1constant0 = 0
 percentOfAlive = 5
 
 Moore = 0
@@ -19,17 +19,18 @@ game.SetConstBoard()
 if random1constant0 == 1:
     game.SetRandomBoard(percentOfAlive)
 
-nameOfFile = input("Enter name of file:")
+# nameOfFile = input("Enter name of file:")
 
-try:
-    with open("./rules/{}.json".format(nameOfFile), "r") as jsonFileRules:
-        data = json.load(jsonFileRules)
-        game.SetRules(data["range"], data["numberOfStates"], data["middleCell"], data["survivalMin"], data["survivalMax"], data["birthMin"], data["birthMax"], data["neighbourhoodType"])
-except:
-    print("Cannot open file, setting default rules\n")
-    game.SetRules(1,0,1,1,1,1,1,1)
+# try:
+#     with open("./rules/{}.json".format(nameOfFile), "r") as jsonFileRules:
+#         data = json.load(jsonFileRules)
+#         game.SetRules(data["range"], data["numberOfStates"], data["middleCell"], data["survivalMin"], data["survivalMax"], data["birthMin"], data["birthMax"], data["neighbourhoodType"])
+# except:
+#     print("Cannot open file, setting default rules\n")
+#     game.SetRules(1,0,1,1,1,1,1,1)
 
 
+game.SetRules(1,0,0,2,3,3,3,0)
 pygame.init()
 gameDisplay = pygame.display.set_mode((constMul*constSize,constMul*constSize))
 
