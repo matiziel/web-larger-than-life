@@ -1,12 +1,13 @@
+#TEST ONLY PYTHON SCRIPT
 import board
 import pygame
 import time
 import json
 
-constMul = 3
-constSize = 300
+constMul = 2
+constSize = 400
 sleepTime = 0.02
-random1constant0 = 0
+random1constant0 = 1
 percentOfAlive = 50
 
 Moore = 0
@@ -45,13 +46,14 @@ while not gameExit:
     
     gameDisplay.fill(black)
 
-    time.sleep(sleepTime) #zmniejsza użycie procesora
 
     for heightArg in range(0,game.Height()):
         for widthArg in range(0,game.Width()):
 
-            if game.GetPixelState(heightArg,widthArg) >0:
-                pygame.draw.rect(gameDisplay, (255,255,254) , [heightArg * constMul ,widthArg * constMul,constMul*1,constMul*1])
-    game.Update()
+            if game.GetPixelState(heightArg,widthArg) == 1:
+                pygame.draw.rect(gameDisplay, (255,255,255) , [heightArg * constMul ,widthArg * constMul,constMul*1,constMul*1])
+    
     pygame.display.update()
+    game.Update()
+    time.sleep(sleepTime) #delays the loop
 

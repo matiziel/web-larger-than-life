@@ -2,8 +2,14 @@
 <head>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <title> {{title}} </title>
+
 </head>
+
 <div style="text-align: center">
+    <form>
+        <button type="submit" formaction="/">Przerwij grę</button>
+    </form>
+    <h1></h1>
     <canvas id="gameBoard" width={{boardWidth}} height={{boardHeight}};>
         Your browser does not support the HTML5 canvas tag.</canvas>
 </div>
@@ -30,6 +36,10 @@
                     ctx.fillRect(constMul*i,constMul*j,constMul,constMul);
                 }
             }
+            $( "button" ).click(function() {
+            $( "div.first" ).slideUp( 300 ).delay( 800 ).fadeIn( 400 );
+            $( "div.second" ).slideUp( 300 ).fadeIn( 400 );
+            });
         },
         complete: function()
         {

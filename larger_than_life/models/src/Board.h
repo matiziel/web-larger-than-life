@@ -32,14 +32,14 @@ public:
 	///SetRandomBoard sets the initial content of the grid to random values
 	///percentAlive variable determines how much of the grid will be alive
 	///
-	void SetRandomBoard(int percentAlive)
+	void SetRandomBoard(int permilleAlive)
 	{
 		srand (time(NULL));
 		for(UShort i = 0; i < this->Height(); ++i)
 		{
 			for(UShort k = 0; k < this->Width(); ++k)
 			{
-				(*current)[i][k] = 0==((rand() % 100) / percentAlive);
+				(*current)[i][k] = 0==((rand() % 1000) / permilleAlive);
 			}
 		}
 	}
@@ -77,7 +77,7 @@ public:
 			sumOfNeighbours = std::bind(&Board::SumOfNeighboursNeumann, this, std::placeholders::_1, std::placeholders::_2);
 		else if(rules.GetN() == 2) 
 			sumOfNeighbours = std::bind(&Board::SumOfNeighboursCircular, this, std::placeholders::_1, std::placeholders::_2);
-
+		else sumOfNeighbours = std::bind(&Board::SumOfNeighboursMoore, this, std::placeholders::_1, std::placeholders::_2);
 
 	}
 	///
@@ -106,7 +106,7 @@ void Update()
 	std::thread t2(&Board::UpdatePart, this, 2);
 	std::thread t3(&Board::UpdatePart, this, 3);
 	t0.join();
-	t1.detach();
+	t1.join();
 	t2.join();
 	t3.join();
 	MultiArray* temp = current;

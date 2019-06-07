@@ -3,19 +3,24 @@
     <title> {{title}} </title>
 </head>
 <body>
-    <h1>{{title}}</h1>
+    <div style="text-align: center">
+        <h1>{{title}}</h1>
 
-    <form>
-        <select name="rule">
-            <option value="Bosco">Bosco</option>
-            <option value="Bugsmovie">Bugsmovie</option>
-            <option value="Gnarl">Gnarl</option>
-            <option value="Life">Life</option>
-            <option value="ModernArt">ModernArt</option>
-            <option value="Waffle">Waffle</option>
-        </select>
-        <button type="submit" formaction="/game/"+rule>Submit to another page</button>
-    </form>
+        <form>
+            <select name="rule">
+                <option value="Bosco,500">Bosco</option>
+                <option value="Bugsmovie,500">Bugsmovie</option>
+                <option value="Gnarl,1">Gnarl</option>
+                <option value="Life,150">Life</option>
+                <option value="ModernArt,5">ModernArt</option>
+                <option value="Waffle,500">Waffle</option>
+                <option value="Majorly,500">Majorly</option>
+                <option value="Majority,500">Majority</option>
+                <option value="Globe,300">Globe</option>
+            </select>
+            <button type="submit" formaction="/game"+rule.select+>Rozpocznij grę</button>
+        </form>
+    </div>
 
 
 </body>
