@@ -3,9 +3,20 @@
     <title> {{title}} </title>
 </head>
 <body>
-
     <h1>{{title}}</h1>
-    <li><a href="/game">Rozpocznij gre</a></li>
+
+    <form>
+        <select name="rule">
+            <option value="Bosco">Bosco</option>
+            <option value="Bugsmovie">Bugsmovie</option>
+            <option value="Gnarl">Gnarl</option>
+            <option value="Life">Life</option>
+            <option value="ModernArt">ModernArt</option>
+            <option value="Waffle">Waffle</option>
+        </select>
+        <button type="submit" formaction="/game/"+rule>Submit to another page</button>
+    </form>
+
 
 </body>
 </html>

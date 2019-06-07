@@ -49,12 +49,6 @@ public:
 		(*current)[i-1][k] = 1;
 		(*current)[i-1][k-1] = 1;
 
-		// k = Width()/4;
-		// i = Height()/4;
-		// (*current)[i][k] = 1;
-		// (*current)[i+1][k] = 1;
-		// (*current)[i+2][k] = 1;
-
 	}
 	void SetRules(UShort rArg = 1, UShort cArg = 2, bool mArg = 0, UShort sMinArg = 2,
     UShort sMaxArg = 3, UShort bMinArg = 3, UShort bMaxArg = 3, UShort nArg = 0)
@@ -64,8 +58,8 @@ public:
 			sumOfNeighbours = std::bind(&Board::SumOfNeighboursNeumann, this, std::placeholders::_1, std::placeholders::_2);
 		else if(rules.GetN() == 2) 
 			sumOfNeighbours = std::bind(&Board::SumOfNeighboursCircular, this, std::placeholders::_1, std::placeholders::_2);
-
-
+		else 
+			sumOfNeighbours = std::bind(&Board::SumOfNeighboursMoore, this, std::placeholders::_1, std::placeholders::_2);
 	}
 
 	UShort Width() const 
@@ -127,8 +121,6 @@ private:
 
 	const UShort SumOfNeighboursMoore(const UShort heightArg, const UShort widthArg) const
 	{
-		// if(heightArg < 0 || heightArg > this->Height() || widthArg < 0 || widthArg > this->Width())
-		// 	throw std::out_of_range("Moore Neighbours overflow");
 		UShort sum = 0;
 		
 		for(int arrY = heightArg - rules.GetRange(); arrY <= static_cast<int>(heightArg + rules.GetRange()); ++arrY)
@@ -147,8 +139,6 @@ private:
 
 	const UShort SumOfNeighboursNeumann(const UShort heightArg, const UShort widthArg) const
 	{
-		// if(heightArg < 0 || heightArg > this->Height() || widthArg < 0 || widthArg > this->Width())
-		// 	throw std::out_of_range("Neumann Neighbours overflow");
 		UShort sum = 0;
 		
 		for(int arrY = heightArg - rules.GetRange(); arrY <= static_cast<int>(heightArg + rules.GetRange()); ++arrY)
@@ -165,9 +155,6 @@ private:
 
 	const UShort SumOfNeighboursCircular(const UShort heightArg, const UShort widthArg) const
 	{
-		// if(heightArg < 0 || heightArg > this->Height() || widthArg < 0 || widthArg > this->Width())
-		// 	throw std::out_of_range("Circular Neighbours overflow");
-
 		UShort sum = 0;
 		float rangeSquared = (rules.GetRange()+0.5)*(rules.GetRange()+0.5);
 		for(int arrY = heightArg - rules.GetRange(); arrY <= static_cast<int>(heightArg + rules.GetRange()); ++arrY)
