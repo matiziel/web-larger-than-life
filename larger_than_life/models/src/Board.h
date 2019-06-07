@@ -7,8 +7,7 @@
 #include <iostream>
 #include <functional>
 
-const unsigned short DEFAULT_SIZE = 256;
-
+const unsigned short DEFAULT_SIZE = 256; 
 
 class Board
 {
@@ -29,6 +28,10 @@ public:
 		next = &gridB;
 		sumOfNeighbours = std::bind(&Board::SumOfNeighboursMoore, this, std::placeholders::_1, std::placeholders::_2);
 	}
+	///
+	///SetRandomBoard sets the initial content of the grid to random values
+	///percentAlive variable determines how much of the grid will be alive
+	///
 	void SetRandomBoard(int percentAlive)
 	{
 		srand (time(NULL));
@@ -40,6 +43,10 @@ public:
 			}
 		}
 	}
+	///
+	///SetConstBoard sets the initial content of the grid to a block in the middle and a blinker
+	///This configuration is useful for debugging and checking many diffrent rules
+	///
 	void SetConstBoard()
 	{
 		UShort k = Width()/2;
@@ -49,7 +56,19 @@ public:
 		(*current)[i-1][k] = 1;
 		(*current)[i-1][k-1] = 1;
 
+		k = Width()/4;
+		i = Height()/4;
+		(*current)[i][k] = 1;
+		(*current)[i+1][k] = 1;
+		(*current)[i+2][k] = 1;
+
 	}
+	///
+	///SetRules sets the game rules according to the RCMSBN standard
+	///
+	///the arguments are respevtively: range, number of cells, middle inclusion, survival lower bound, 
+	///survival upper bound, birth lower bound, birth upper bound, neighbourhood type
+	///
 	void SetRules(UShort rArg = 1, UShort cArg = 2, bool mArg = 0, UShort sMinArg = 2,
     UShort sMaxArg = 3, UShort bMinArg = 3, UShort bMaxArg = 3, UShort nArg = 0)
 	{
@@ -58,10 +77,18 @@ public:
 			sumOfNeighbours = std::bind(&Board::SumOfNeighboursNeumann, this, std::placeholders::_1, std::placeholders::_2);
 		else if(rules.GetN() == 2) 
 			sumOfNeighbours = std::bind(&Board::SumOfNeighboursCircular, this, std::placeholders::_1, std::placeholders::_2);
-		else 
-			sumOfNeighbours = std::bind(&Board::SumOfNeighboursMoore, this, std::placeholders::_1, std::placeholders::_2);
-	}
 
+
+	}
+	///
+	///GetPixelState returns current value of a grid element.
+	///
+	int GetPixelState(const UShort heightArg, const UShort widthArg) const 
+	{
+		if(heightArg >= this->Height() || widthArg >= this->Width())
+			throw std::out_of_range("Board overflow");
+		return static_cast<int>((*current)[heightArg][widthArg]);
+	}
 	UShort Width() const 
 	{
 		return (*current).shape()[1];
@@ -72,43 +99,49 @@ public:
 		return (*current).shape()[0];
 	}
 
-	int GetPixelState(const UShort heightArg, const UShort widthArg) const 
-	{
-		if(heightArg >= this->Height() || widthArg >= this->Width())
-			throw std::out_of_range("Board overflow");
-		return static_cast<int>((*current)[heightArg][widthArg]);
-	}
-
 void Update()
 {
-	for(UShort i = 0; i < this->Height(); ++i)
+	std::thread t0(&Board::UpdatePart, this, 0);
+	std::thread t1(&Board::UpdatePart, this, 1);
+	std::thread t2(&Board::UpdatePart, this, 2);
+	std::thread t3(&Board::UpdatePart, this, 3);
+	t0.join();
+	t1.detach();
+	t2.join();
+	t3.join();
+	MultiArray* temp = current;
+	current = next;
+	next = temp;
+}
+
+void UpdatePart(const int partInd)
+{
+	const int start = this->Height() * partInd / 4;
+	const int end   = this->Height() * (partInd + 1) / 4;
+	for(UShort i = start; i < end; ++i)
 	{
 		for(UShort k = 0; k < this->Width(); ++k)
 		{
 			UShort sum = sumOfNeighbours(i,k);
 			
-			if((*current)[i][k] == 0) //Jeżeli martwe to ożywa albo zostaje martwe
+			if((*current)[i][k] == 0) //If dead, stays dead or becomes alive
 			{
 				if(sum >= rules.GetBMin() && sum <= rules.GetBMax()) 
 					(*next)[i][k] = 1;
 				else 
 					(*next)[i][k] = 0;
 			}
-			else if((*current)[i][k] == 1) //Jeżeli żywe to przeżywa albo zaczyna się starzeć
+			else if((*current)[i][k] == 1) //If alive, stays alive or starts to decay
 			{
 				if(sum >= rules.GetSMin() && sum <= rules.GetSMax()) 
 					(*next)[i][k] = 1;
 				else 
 					(*next)[i][k] = 2%rules.GetStates();
 			}
-			else (*next)[i][k] = (1+(*current)[i][k])%rules.GetStates(); //Starzeje się
+			else (*next)[i][k] = (1+(*current)[i][k])%rules.GetStates(); //Decays
 		}
-	} 
-	MultiArray* temp = current;
-	current = next;
-	next = temp;
+	}
 }
-
 
 private:
 	MultiArray gridA;
@@ -170,5 +203,4 @@ private:
 		return sum;
 	}
 };
-
 #endif
